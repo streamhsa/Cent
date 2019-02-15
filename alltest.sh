@@ -1,0 +1,19 @@
+./1git_all_sources.sh
+./2computeapps.sh
+./3hip.sh
+./4hip-examples.sh
+./5rocblas.sh
+./6hipblas.sh
+./7rocfft.sh
+./8rocrand.sh
+./9rocprim.sh
+./10rocsparse.sh
+./11hipsparse.sh
+./12rocalution.sh
+./13hipeigen.sh
+./14miopen.sh
+./15hipcaffe.sh
+./16deepbench.sh
+./17gromacs.sh
+./18kokkos.sh
+cd ~/Desktop/Jenkins/home/taccuser/Desktop/Jenkins/OCL
