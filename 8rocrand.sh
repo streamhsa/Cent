@@ -1,4 +1,7 @@
-git clone -b master https://github.com/rocmsoftwareplatform/rocrand && cd rocrand
+#sudo rm -rf cd ~/Desktop/rocm/workloads/mathlibs/rocrand
+#cd ~/Desktop/rocm/workloads/mathlibs/
+#git clone -b master https://github.com/rocmsoftwareplatform/rocrand && cd rocrand
+
 cd ~/Desktop/rocm/workloads/mathlibs/rocrand
 
 echo AH64_uh1 | sudo rm -rf build
@@ -15,6 +18,3 @@ ctest --output-on-failure >> ~/Desktop/logs/8rocrand_ctest.log 2>&1
 ./benchmark/benchmark_rocrand_generate --engine all --dis all >> ~/Desktop/logs/8rocrand_benchmark_rocrand-generate.log 2>&1
 #To run benchmark for device kernel functions
 ./benchmark/benchmark_rocrand_kernel --engine all --dis all >> ~/Desktop/logs/8rocrand_benchmark_rocrand-kernel.log 2>&1
-
-
-
