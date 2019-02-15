@@ -1,4 +1,8 @@
-git clone https://github.com/rocmsoftwareplatform/deepbench && cd deepbench
+#sudo rm -rf cd ~/Desktop/rocm/workloads/DNNs/deepbench
+#cd ~/Desktop/rocm/workloads/DNNs/
+#git clone https://github.com/rocmsoftwareplatform/deepbench && cd deepbench
+
+
 cd ~/Desktop/rocm/workloads/DNNs/deepbench
 
 echo AH64_uh1 | sudo rm -rf ~/.cache/miopen/
@@ -18,4 +22,3 @@ make all -j4 >> ~/Desktop/logs/16deepbench_build.log 2>&1
 ./bin/gemm_bench >> ~/Desktop/logs/16deepbench_gemm.log 2>&1
 ./bin/rnn_bench >> ~/Desktop/logs/16deepbench_rnn.log 2>&1
 ./bin/rccl_single_all_reduce 2 >> ~/Desktop/logs/16deepbench_rccl.log 2>&1
-
