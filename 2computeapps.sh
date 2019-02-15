@@ -1,10 +1,11 @@
-git clone https://github.com/amdcomputelibraries/computeapps && cd computeapps
+# rm -rf cd ~/Desktop/rocm/workloads/computeapps
+#cd ~/Desktop/rocm/workloads/
+#git clone https://github.com/amdcomputelibraries/computeapps && cd computeapps
+
 cd ~/Desktop/rocm/workloads/computeapps
 
 #echo AH64_uh1 | sudo rm -rf computeapps_old
 #echo AH64_uh1 | sudo mv -f computeapps computeapps_old
-
-#git clone https://github.com/amdcomputelibraries/computeapps
 
 cd comd-amp/src-amp
 make clean
