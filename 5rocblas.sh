@@ -1,5 +1,7 @@
-cd ~/Desktop/rocm/workloads/mathlibs/rocblas
+#sudo rm -rf cd ~/Desktop/rocm/workloads/mathlibs/rocblas
+#git clone -b master https://github.com/rocmsoftwareplatform/rocblas && cd rocblas
 
+cd ~/Desktop/rocm/workloads/mathlibs/rocblas
 echo AH64_uh1 | sudo yum install cmake cmake-qt-gui cmake-curses-gui python-yaml libblas-dev liblapack-dev libboost-all-dev
 
 echo AH64_uh1 | sudo rm -rf build
