@@ -1,4 +1,8 @@
-git clone -b develop https://streamhsa:AH64_uh1@github.com/amdcomputelibraries/mlopen && cd mlopen
+#sudo rm -rf cd ~/Desktop/rocm/workloads/DNNs/mlopen
+#cd ~/Desktop/rocm/workloads/DNNs/
+#git clone -b develop https://streamhsa:AH64_uh1@github.com/amdcomputelibraries/mlopen && cd mlopen
+
+
 cd ~/Desktop/rocm/workloads/DNNs/mlopen
 
 echo AH64_uh1 | sudo rm -rf ~/.cache/miopen/
@@ -21,5 +25,3 @@ sudo make check >> ~/Desktop/logs/14miopen_test.log 2>&1
 sudo make MIOpenDriver >> ~/Desktop/logs/14miopen_driver.log 2>&1
 
  ./bin/MIOpenDriver conv -s 0 -v 0 -t 1 -F 1 -W 28 -H 28 -c 256 -n 8 -k 512 -x 3 -y 3 -p 1 -q 1 -u 1 -v 1 >> ~/Desktop/logs/14miopen_benchmark.log 2>&1
-
-
