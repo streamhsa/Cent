@@ -1,4 +1,8 @@
-git clone https://github.com/ROCmSoftwarePlatform/hipCaffe -b hip-centos && cd hipcaffe
+#sudo rm -rf cd ~/Desktop/rocm/workloads/DNNs/hipCaffe
+#cd ~/Desktop/rocm/workloads/DNNs/
+#git clone https://github.com/ROCmSoftwarePlatform/hipCaffe -b hip-centos && cd hipcaffe
+
+
 cd ~/Desktop/rocm/workloads/DNNs/hipCaffe
 
 export PATH=/opt/rocm/bin:$PATH
@@ -43,11 +47,3 @@ make test -j16 >> ~/Desktop/logs/15hipcaffe_build.log 2>&1
     data/ilsvrc12/imagenet_mean.binaryproto \
     data/ilsvrc12/synset_words.txt \
     examples/images/cat.jpg >> ~/Desktop/logs/15hipcaffe_caffenetInference.log 2>&1
-
-
-
-
-
-
-
-
