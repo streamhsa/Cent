@@ -1,4 +1,5 @@
 #sudo rm -rf cd ~/Desktop/rocm/workloads/mathlibs/rocblas
+#cd ~/Desktop/rocm/workloads/mathlibs/
 #git clone -b master https://github.com/rocmsoftwareplatform/rocblas && cd rocblas
 
 cd ~/Desktop/rocm/workloads/mathlibs/rocblas
