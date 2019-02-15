@@ -1,4 +1,8 @@
-git clone -b master https://github.com/rocmsoftwareplatform/rocfft && cd rocfft
+#sudo rm -rf cd ~/Desktop/rocm/workloads/mathlibs/rocfft
+#cd ~/Desktop/rocm/workloads/mathlibs/
+#git clone -b master https://github.com/rocmsoftwareplatform/rocfft && cd rocfft
+
+
 cd ~/Desktop/rocm/workloads/mathlibs/rocfft
 
 echo AH64_uh1 | sudo yum -y install cmake-qt-gui cmake-curses-gui python-yaml libblas-dev liblapack-dev libboost-all-dev
