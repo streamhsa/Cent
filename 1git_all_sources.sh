@@ -24,7 +24,7 @@ cd ..
 
 mkdir mathlibs && cd mathlibs
 
-git clone -b master https://github.com/rocmsoftwareplatform/rocblas && cd rocblas
+git clone -b master-rocm-2.5 https://github.com/rocmsoftwareplatform/rocblas && cd rocblas
 printf "rocblas           " >> $final_logfile
 git log | grep -m 1 commit | awk '{printf $2}'>> $final_logfile
 printf "        " >> $final_logfile
@@ -32,7 +32,7 @@ git log | grep -m 1 Date | awk '{printf $3; printf $4}' >> $final_logfile
 printf "\n" >> $final_logfile
 cd ..
 
-git clone -b master https://github.com/rocmsoftwareplatform/hipblas && cd hipblas
+git clone -b master-rocm-2.5 https://github.com/rocmsoftwareplatform/hipblas && cd hipblas
 printf "hipblas           " >> $final_logfile
 git log | grep -m 1 commit | awk '{printf $2}'>> $final_logfile
 printf "        " >> $final_logfile
@@ -48,7 +48,7 @@ git log | grep -m 1 Date | awk '{printf $3; printf $4}' >> $final_logfile
 printf "\n" >> $final_logfile
 cd ..
 
-git clone -b master https://github.com/rocmsoftwareplatform/rocrand && cd rocrand
+git clone -b master-rocm-2.5 https://github.com/rocmsoftwareplatform/rocrand && cd rocrand
 printf "rocrand            " >> $final_logfile
 git log | grep -m 1 commit | awk '{printf $2}'>> $final_logfile
 printf "        " >> $final_logfile
@@ -56,7 +56,7 @@ git log | grep -m 1 Date | awk '{printf $3; printf $4}' >> $final_logfile
 printf "\n" >> $final_logfile
 cd ..
 
-git clone -b master https://github.com/rocmsoftwareplatform/rocprim && cd rocprim
+git clone -b master-rocm-2.5 https://github.com/rocmsoftwareplatform/rocprim && cd rocprim
 printf "rocprim            " >> $final_logfile
 git log | grep -m 1 commit | awk '{printf $2}'>> $final_logfile
 printf "        " >> $final_logfile
@@ -64,7 +64,7 @@ git log | grep -m 1 Date | awk '{printf $3; printf $4}' >> $final_logfile
 printf "\n" >> $final_logfile
 cd ..
 
-git clone -b master https://github.com/rocmsoftwareplatform/rocsparse && cd rocsparse
+git clone -b master-rocm-2.5 https://github.com/rocmsoftwareplatform/rocsparse && cd rocsparse
 printf "rocsparse          " >> $final_logfile
 git log | grep -m 1 commit | awk '{printf $2}'>> $final_logfile
 printf "        " >> $final_logfile
@@ -72,7 +72,7 @@ git log | grep -m 1 Date | awk '{printf $3; printf $4}' >> $final_logfile
 printf "\n" >> $final_logfile
 cd ..
 
-git clone -b master https://github.com/rocmsoftwareplatform/hipsparse && cd hipsparse
+git clone -b master-rocm-2.5 https://github.com/rocmsoftwareplatform/hipsparse && cd hipsparse
 printf "hipsparse          " >> $final_logfile
 git log | grep -m 1 commit | awk '{printf $2}'>> $final_logfile
 printf "        " >> $final_logfile
@@ -80,7 +80,7 @@ git log | grep -m 1 Date | awk '{printf $3; printf $4}' >> $final_logfile
 printf "\n" >> $final_logfile
 cd ..
 
-git clone -b master https://github.com/rocmsoftwareplatform/rocalution && cd rocalution
+git clone -b master-rocm-2.5 https://github.com/rocmsoftwareplatform/rocalution && cd rocalution
 printf "rocalution         " >> $final_logfile
 git log | grep -m 1 commit | awk '{printf $2}'>> $final_logfile
 printf "        " >> $final_logfile
@@ -100,7 +100,7 @@ git log | grep -m 1 Date | awk '{printf $3; printf $4}' >> $final_logfile
 printf "\n" >> $final_logfile
 cd ..
 
-git clone https://github.com/ROCmSoftwarePlatform/hipCaffe -b hip-centos && cd hipcaffe
+git clone https://github.com/ROCmSoftwarePlatform/hipCaffe -b hip-centos && cd hipCaffe
 printf "hipcaffe          " >> $final_logfile
 git log | grep -m 1 commit | awk '{printf $2}'>> $final_logfile
 printf "        " >> $final_logfile
