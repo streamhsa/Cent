@@ -1,0 +1,79 @@
+timestamps {
+    node ("$node") {
+    sh '''
+    whoami
+	'''
+def build_success = true
+
+try {
+    stage ('JOB1 (KFD -  tests)')
+    {
+    sh '''
+    cd ~/dockerx/MLSEQA_TestRepo/ ; git stash ; git pull https://streamhsa:AH64_uh1@github.com/RadeonOpenCompute/MLSEQA_TestRepo.git
+	cd ~/dockerx/MLSEQA_TestRepo/utils ; chmod +x install_automation_prerequisites.sh ;	./install_automation_prerequisites.sh
+	cd ~/dockerx/MLSEQA_TestRepo/utils/Test_Framework_APIs/mlpmo_executor ;	python3.6 mlpmo_executor.py --configfile sample_configs/KFD/RaviPram/kfd.json
+    '''
+    }
+    }
+    
+    catch (Exception e) 
+	{
+    build_success = false
+    echo e.toString()
+    echo "'JOB1 (KFD - tests)' stage failed."
+    }
+	
+try {
+    stage ('JOB2 (ROCr - Unit tests)')
+    {
+    sh '''
+	cd ~/dockerx/MLSEQA_TestRepo/utils/Test_Framework_APIs/mlpmo_executor
+	python3.6 mlpmo_executor.py --configfile sample_configs/ROCR/RaviPram/rocr.json
+	'''
+    }
+    } 
+    
+    catch (Exception e) 
+	{
+    build_success = false
+    echo e.toString()
+    echo "'JOB2 (ROCr - Unit tests)' stage failed."
+    }
+
+try {
+    stage ('JOB3 (ROCr - Samples)')
+    {
+    sh '''
+	cd ~/dockerx/MLSEQA_TestRepo/Sanity/Unittests_Automation/hip; python3.6 rocr_sample.py -s
+	'''
+    }
+    }
+    
+    catch (Exception e) 
+	{
+    build_success = false
+    echo e.toString()
+    echo "'JOB3 (ROCr - Samples) stage failed."
+	}	
+	
+	
+try {
+    stage ('JOB4 (RBT)')
+    {
+    sh '''
+    cd ~/dockerx/MLSEQA_TestRepo/Sanity/driver_sanity/RBT/CentOS 
+    python3 runme.py All_Tests
+    '''
+    }
+    } 
+    
+    catch (Exception e) 
+	{
+    build_success = false
+    echo e.toString()
+    echo "'JOB4 (RBT)' stage failed."
+    }	
+	
+
+}
+}
