@@ -1,0 +1,173 @@
+timestamps {
+    node ("$node") {
+    sh '''
+    whoami
+	'''
+def build_success = true
+
+def cid = sh(script: 'sudo docker run -d -it --shm-size 16G --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --device=/dev/kfd --device=/dev/dri --group-add video --group-add 44 -it -v $HOME/dockerx:/dockerx $docker', returnStdout: true)
+
+try {
+    stage ('JOB1 (rocthrust) - Unit tests')
+    {
+    sh '''
+	sudo docker exec -i $cid bash -c 'cd /dockerx/MLSEQA_TestRepo/ ; git stash ; git pull https://streamhsa:AH64_uh1@github.com/RadeonOpenCompute/MLSEQA_TestRepo.git'
+	sudo docker exec -i $cid bash -c 'cd /dockerx/MLSEQA_TestRepo/utils ; chmod +x install_automation_prerequisites.sh ; ./install_automation_prerequisites.sh '
+    	sudo docker exec -i $cid bash -c 'cd /dockerx/MLSEQA_TestRepo/utils/Test_Framework_APIs/mlpmo_executor ; python3.6 mlpmo_executor.py --configfile sample_configs/Mathlibs/RaviPram/rocthrust.json'
+	'''
+    }
+    }
+    
+    catch (Exception e) 
+	{
+    build_success = false
+    echo e.toString()
+    echo "'JOB1 (rocthrust) - Unit tests' stage failed."
+    }
+	
+try {
+    stage ('JOB2 (hipBLAS) - Unit tests')
+    {
+    sh '''
+    sudo docker exec -i $cid bash -c 'cd /dockerx/MLSEQA_TestRepo/utils/Test_Framework_APIs/mlpmo_executor ; python3.6 mlpmo_executor.py --configfile sample_configs/Mathlibs/RaviPram/hipblas.json'
+    '''
+    }
+    } 
+    
+    catch (Exception e) 
+	{
+    build_success = false
+    echo e.toString()
+    echo "'JOB2 (hipBLAS) - Unit tests' stage failed."
+    }
+	
+try {
+    stage ('JOB3 (rocFFT) - Unit tests')
+    {
+    sh '''
+    sudo docker exec -i $cid bash -c 'cd /dockerx/MLSEQA_TestRepo/utils/Test_Framework_APIs/mlpmo_executor ; python3.6 mlpmo_executor.py --configfile sample_configs/Mathlibs/RaviPram/rocfft.json'
+	'''
+    }
+    } 
+    
+    catch (Exception e) 
+	{
+    build_success = false
+    echo e.toString()
+    echo "'JOB3 (rocFFT) - Unit tests' stage failed."
+    }
+
+try {
+    stage ('JOB4 (rocRAND) - Unit tests')
+    {
+    sh '''
+    sudo docker exec -i $cid bash -c 'cd /dockerx/MLSEQA_TestRepo/utils/Test_Framework_APIs/mlpmo_executor ; python3.6 mlpmo_executor.py --configfile sample_configs/Mathlibs/RaviPram/rocrand.json'
+	'''
+    }
+    } 
+    
+    catch (Exception e) 
+	{
+    build_success = false
+    echo e.toString()
+    echo "'JOB4 (rocRAND) - Unit tests' stage failed."
+    }
+	
+try {
+    stage ('JOB5 (rocSPARSE) - Unit tests')
+    {
+    sh '''
+    sudo docker exec -i $cid bash -c 'cd /dockerx/MLSEQA_TestRepo/utils/Test_Framework_APIs/mlpmo_executor ; python3.6 mlpmo_executor.py --configfile sample_configs/Mathlibs/RaviPram/rocsparse.json'
+	'''
+    }
+    } 
+    
+    catch (Exception e) 
+	{
+    build_success = false
+    echo e.toString()
+    echo "'JOB5 (rocSPARSE) - Unit tests' stage failed."
+    }
+	
+try {
+    stage ('JOB6 (hipSPARSE) - Unit tests')
+    {
+    sh '''
+    sudo docker exec -i $cid bash -c 'cd /dockerx/MLSEQA_TestRepo/utils/Test_Framework_APIs/mlpmo_executor ; python3.6 mlpmo_executor.py --configfile sample_configs/Mathlibs/RaviPram/hipsparse.json'
+	'''
+    }
+    } 
+    
+    catch (Exception e) 
+	{
+    build_success = false
+    echo e.toString()
+    echo "'JOB6 (hipSPARSE) - Unit tests' stage failed."
+    }
+	
+try {
+    stage ('JOB7 (rocALUTION) - Unit tests')
+    {
+    sh '''
+    sudo docker exec -i $cid bash -c 'cd /dockerx/MLSEQA_TestRepo/utils/Test_Framework_APIs/mlpmo_executor ; python3.6 mlpmo_executor.py --configfile sample_configs/Mathlibs/RaviPram/rocalution.json'
+	'''
+    }
+    } 
+    
+    catch (Exception e) 
+	{
+    build_success = false
+    echo e.toString()
+    echo "'JOB7 (rocALUTION) - Unit tests' stage failed."
+    }
+	
+try {
+    stage ('JOB8 (rocPRIM) - Unit tests')
+    {
+    sh '''
+    sudo docker exec -i $cid bash -c 'cd /dockerx/MLSEQA_TestRepo/utils/Test_Framework_APIs/mlpmo_executor ; python3.6 mlpmo_executor.py --configfile sample_configs/Mathlibs/RaviPram/rocprim.json'
+	'''
+    }
+    } 
+    
+    catch (Exception e) 
+	{
+    build_success = false
+    echo e.toString()
+    echo "'JOB8 (rocPRIM) - Unit tests' stage failed."
+    }
+	
+try {
+    stage ('JOB9 (hipCUB) - Unit tests')
+    {
+    sh '''
+    sudo docker exec -i $cid bash -c 'cd /dockerx/MLSEQA_TestRepo/utils/Test_Framework_APIs/mlpmo_executor ; python3.6 mlpmo_executor.py --configfile sample_configs/Mathlibs/RaviPram/hipcub.json'
+	'''
+    }
+    } 
+    
+    catch (Exception e) 
+	{
+    build_success = false
+    echo e.toString()
+    echo "'JOB9 (hipCUB) - Unit tests' stage failed."
+    }
+
+try {
+    stage ('JOB10 (rocBLAS) - Unit tests')
+    {
+    sh '''
+    sudo docker exec -i $cid bash -c 'cd /dockerx/MLSEQA_TestRepo/utils/Test_Framework_APIs/mlpmo_executor ; python3.6 mlpmo_executor.py --configfile sample_configs/Mathlibs/RaviPram/rocblas.json'
+	'''
+    }
+    } 
+    
+    catch (Exception e) 
+	{
+    build_success = false
+    echo e.toString()
+    echo "'JOB9 (rocBLAS) - Unit tests' stage failed."
+    }
+	
+}
+}

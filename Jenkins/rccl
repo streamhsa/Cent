@@ -1,0 +1,57 @@
+
+timestamps {
+    node ("$node") {
+    sh '''
+    whoami
+    '''
+def build_success = true
+
+try {
+    stage ('JOB1 (RRCL) - tests')
+    {
+    sh '''
+
+	cid=`sudo docker run -d -it --shm-size 16G --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --device=/dev/kfd --device=/dev/dri --group-add video --group-add 44 -it -v $HOME/dockerx:/dockerx $docker`
+	
+	sudo docker exec -i $cid bash -c 'cd /dockerx/MLSEQA_TestRepo/ ; git stash ; git pull; https://streamhsa:AH64_uh1@github.com/RadeonOpenCompute/MLSEQA_TestRepo.git'
+	
+	sudo docker exec -i $cid bash -c 'cd /dockerx/MLSEQA_TestRepo/utils ; chmod +x install_automation_prerequisites.sh ; ./install_automation_prerequisites.sh '
+	
+	sudo docker exec -i $cid bash -c 'cd /dockerx/MLSEQA_TestRepo/utils/Test_Framework_APIs/mlpmo_executor ; python3.6 mlpmo_executor.py --configfile sample_configs/RCCL/RaviPram/rccl_tests_executor.json'
+	
+	sudo docker rm $cid -f
+    '''
+    }
+    }
+    
+    catch (Exception e) 
+	{
+    build_success = false
+    echo e.toString()
+    echo "'JOB1 (RCCL) - tests' stage failed."
+    }
+
+try {
+    stage ('JOB2 (RCCL) - Unit tests')
+    {
+    sh '''
+	cid=`sudo docker run -d -it --shm-size 16G --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --device=/dev/kfd --device=/dev/dri --group-add video --group-add 44 -it -v $HOME/dockerx:/dockerx $docker`
+	
+	sudo docker exec -i $cid bash -c 'cd /dockerx/MLSEQA_TestRepo/utils ; chmod +x install_automation_prerequisites.sh ; ./install_automation_prerequisites.sh '
+	
+	sudo docker exec -i $cid bash -c 'cd /dockerx/MLSEQA_TestRepo/utils/Test_Framework_APIs/mlpmo_executor ; python3.6 mlpmo_executor.py --configfile sample_configs/RCCL/RaviPram/rccl_ut_executor.json'
+	
+	sudo docker rm $cid -f
+    	'''
+    }
+    }
+    
+    catch (Exception e) 
+	{
+    build_success = false
+    echo e.toString()
+    echo "'JOB2 (RCCL) - rccl Unit tests stage' failed."
+	}
+
+}
+}
