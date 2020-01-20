@@ -1,0 +1,97 @@
+#!/bin/sh
+current=`pwd`
+
+echo $password
+
+cd $HOME/Documents/
+
+echo $password | sudo -S chmod 775 * -R
+echo $password | sudo -S rm -rf index.html
+#echo $password | sudo -S wget http://rocm-ci.amd.com/job/compute-roc-master/lastSuccessfulBuild/
+#build=`grep "<title>compute-roc-master" index.html | cut -d'#' -f2 | cut -d' ' -f1`
+#echo $build 
+
+echo $build 
+
+rm -rf pytorch
+git clone -b rocm3.0_internal_testing https://github.com/ROCmSoftwarePlatform/pytorch
+#git clone https://github.com/pytorch/pytorch
+cp -rf install_rocm-pk.sh pytorch/docker/caffe2/jenkins/common/install_rocm.sh
+
+#IF CENTOS DO BELOW
+#sed -i '5i export PATH=/opt/rocm/hip/bin:/opt/rocm/hcc/bin:/opt/rocm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin' pytorch/docker/caffe2/jenkins/common/install_ccache.sh
+
+#IF UB18.04 DO BELOW
+#sed -i '21i apt-get -y update' pytorch/docker/caffe2/jenkins/common/install_base.sh
+#sed -i '30i echo 13 | apt-get install -y tzdata' pytorch/docker/caffe2/jenkins/common/install_base.sh
+#sed -i '107i apt-get -y update' pytorch/docker/caffe2/jenkins/common/install_python.sh
+#sed -i '108i apt-get install -y python3.6-distutils' pytorch/docker/caffe2/jenkins/common/install_python.sh
+#sed -i '4i apt-get -y update' pytorch/docker/caffe2/jenkins/common/install_clang.sh
+#sed -i '7i apt-get install -y gpg-agent' pytorch/docker/caffe2/jenkins/common/install_clang.sh
+
+cd pytorch/docker/caffe2/jenkins
+
+
+echo $password | sudo -S rm -rf dockerimages.log
+echo $password | sudo -S docker images > dockerimages.log
+caffe2=`awk '/none/{print $3}' dockerimages.log`
+echo $caffe2
+echo $password | sudo -S docker rmi $caffe2 -f
+
+echo $password | sudo -S ./build.sh py3.6-devtoolset8-glibc2.26-rocmrpm-centos7.5
+
+
+echo $password | sudo -S docker images > dockerimages.log
+caffe2=`awk '/none/{print $3}' dockerimages.log`
+echo $caffe2
+
+
+#echo $password | sudo -S docker run -it -d --network=host --device=/dev/kfd --device=/dev/dri --group-add video -v $HOME/dockerx:/dockerx $caffe2
+echo $password | sudo -S docker run -it -d --rm --network=host -v $HOME/dockerx:/dockerx $caffe2
+echo $password | sudo -S docker ps > container.log
+cont=`awk '/'$caffe2'/{print $1}' container.log`
+
+#cont=9754b63739ef
+echo $cont
+
+####################Enable CXX ABI FLAG######################
+echo $password | sudo -S docker exec -i $cont bash -c "cd /root && sed -i 's/_GLIBCXX_USE_DUAL_ABI 0/_GLIBCXX_USE_DUAL_ABI 1/g' /opt/rh/devtoolset-8/root/usr/include/c++/8/x86_64-redhat-linux/bits/c++config.h"
+echo $password | sudo -S docker exec -i $cont bash -c "cd /root && sed -i 's/_GLIBCXX_USE_CXX11_ABI 0/_GLIBCXX_USE_CXX11_ABI 1/g' /opt/rh/devtoolset-8/root/usr/include/c++/8/x86_64-redhat-linux/bits/c++config.h"
+
+echo $password | sudo -S docker exec -i $cont bash -c "grep -nir 'GLIBCXX_USE_DUAL_ABI' /opt/rh/devtoolset-8/root/usr/include/c++/8/x86_64-redhat-linux/bits/c++config.h"
+echo $password | sudo -S docker exec -i $cont bash -c "grep -nir 'GLIBCXX_USE_CXX11_ABI' /opt/rh/devtoolset-8/root/usr/include/c++/8/x86_64-redhat-linux/bits/c++config.h"
+
+####################Enable CLANG 8 ##########################
+echo $password | sudo -S docker exec -i $cont bash -c "cd /root/ && yum install rpm-build perl-Digest-MD5"
+echo $password | sudo -S docker exec -i $cont bash -c "cd /root/ && git clone https://github.com/llvm/llvm-project.git && cd llvm-project && git checkout release/8.x"
+echo $password | sudo -S docker exec -i $cont bash -c "cd /root/ && mkdir build && cd build &&  wget https://raw.githubusercontent.com/scchan/misc/master/linux/build-clang.centos && chmod 775 build-clang.centos && ./build-clang.centos && rpm -ihv --force clang_amd*.rpm"
+echo $password | sudo -S docker exec -i $cont bash -c "cd /opt/rh/devtoolset-8/root/usr/bin && c++ --version && ln -sf /usr/bin/clang cc && ln -sf /usr/bin/clang++ c++ && ln -sf /usr/bin/clang++ cpp && c++ --version"
+
+
+#########python3-upstream########
+#echo $password | sudo -S docker exec -i $cont bash -c "cd /root && rm -rf pytorch && git clone https://github.com/pytorch/pytorch"
+#echo $password | sudo -S docker exec -i $cont bash -c "cd /root/pytorch && git submodule update --init --recursive"
+#echo $password | sudo -S docker exec -i $cont bash -c "cd /root/pytorch && pip3 install cffi pyyaml && .jenkins/pytorch/build.sh 2>&1 | tee pytorch_build.log"
+#echo $password | sudo -S docker commit $cont rocmqa/py:$build-py3-centos
+#echo $password | sudo -S docker exec -i $cont bash -c "mkdir /data && cp -rf /dockerx/resnet_trainer /data/"
+#echo $password | sudo -S docker exec -i $cont bash -c "cd /root && rm -rf caffe2 && git clone --recurse-submodules https://github.com/pytorch/pytorch caffe2"
+#echo $password | sudo -S docker exec -i $cont bash -c "cd /root/caffe2 && git submodule update --init --recursive"
+#echo $password | sudo -S docker exec -i $cont bash -c "cd /root/caffe2 && pip3 install cffi pyyaml && .jenkins/caffe2/build.sh 2>&1 | tee caffe2_build.log"
+#echo $password | sudo -S docker commit $cont rocmqa/pyc2:$build-py3-centos
+#echo $password | sudo -S docker rm $cont -f
+
+#########python3-downstream########
+echo $password | sudo -S docker exec -i $cont bash -c "cd /root && rm -rf caffe2 && git clone --recurse-submodules -b rocm3.0_internal_testing https://github.com/ROCmSoftwarePlatform/pytorch caffe2"
+echo $password | sudo -S docker exec -i $cont bash -c "cd /root/caffe2 && git submodule update --init --recursive"
+echo $password | sudo -S docker exec -i $cont bash -c "cd /root/caffe2 && pip3 install cffi pyyaml && .jenkins/caffe2/build.sh 2>&1 | tee caffe2_build.log"
+echo $password | sudo -S docker commit $cont rocmqa/c2:$build-py3-devtset8-clang8glibc2.26cxxabi-centos7
+
+echo $password | sudo -S docker exec -i $cont bash -c "cd /root && rm -rf pytorch && git clone -b rocm3.0_internal_testing https://github.com/ROCmSoftwarePlatform/pytorch"
+echo $password | sudo -S docker exec -i $cont bash -c "cd /root/pytorch && git submodule update --init --recursive"
+echo $password | sudo -S docker exec -i $cont bash -c "cd /root/pytorch && pip3 install cffi pyyaml && .jenkins/pytorch/build.sh 2>&1 | tee pytorch_build.log"
+echo $password | sudo -S docker commit $cont rocmqa/pyc2:$build-py3-devtset8-clang8glibc2.26cxxabi-centos7
+#echo $password | sudo -S docker push  rocmqa/pyc2:$build-py3-ub16.04
+#echo $password | sudo -S docker rm $cont -f
+
+
+
